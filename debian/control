@@ -1,0 +1,12 @@
+Source: regolith-ftue
+Section: x11
+Priority: optional
+Maintainer: Ken Gilmer <kgilmer@gmail.com>
+Build-Depends: debhelper (>= 10)
+Standards-Version: 4.1.2
+Homepage: https://github.com/regolith-linux/regolith-ftue
+
+Package: regolith-ftue
+Architecture: any
+Depends: ${misc:Depends}, remontoire
+Description: Regolith first time user experience

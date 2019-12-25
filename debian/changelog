@@ -1,0 +1,5 @@
+regolith-ftue (1.0.0-1ubuntu1~ppa1) eoan; urgency=medium
+
+  * Initial release, migrated and adapted from regolith-conky-config.
+
+ -- Ken Gilmer <kgilmer@gmail.com>  Tue, 24 Dec 2019 20:58:48 -0800

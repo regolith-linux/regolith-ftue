@@ -1,0 +1,11 @@
+#!/bin/bash
+# If remontoire is running, kill it.  Otherwise start it.
+
+remontoire_PID=$(ps aux | grep "[/]usr/bin/remontoire" | awk '{print $2}')
+
+if [ -z "$remontoire_PID" ]
+then
+    /usr/bin/remontoire &
+else
+    kill $remontoire_PID
+fi
