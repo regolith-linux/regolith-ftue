@@ -1,3 +1,15 @@
+regolith-ftue (1.0.2-1ubuntu1~ppa1) eoan; urgency=medium
+
+  * Migrate to new PPA. 
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sun, 12 Jan 2020 19:21:17 -0800
+
+regolith-ftue (1.0.1-1ubuntu1~ppa1) eoan; urgency=medium
+
+  * Make toggle script work. 
+
+ -- Ken Gilmer <kgilmer@gmail.com>  Wed, 25 Dec 2019 18:30:51 -0800
+
 regolith-ftue (1.0.0-1ubuntu1~ppa2) eoan; urgency=medium
 
   * Add conflict declaration for deprecated package. 
