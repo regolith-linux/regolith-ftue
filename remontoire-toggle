@@ -5,7 +5,7 @@ remontoire_PID=$(pidof remontoire)
 
 if [ -z "$remontoire_PID" ]
 then
-    /usr/bin/remontoire &
+    /usr/bin/remontoire $(printenv I3SOCK) &
 else
     kill $remontoire_PID
 fi

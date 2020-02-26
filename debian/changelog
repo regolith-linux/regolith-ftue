@@ -1,3 +1,9 @@
+regolith-ftue (1.0.3-1ubuntu1~ppa1) eoan; urgency=medium
+
+  * Pass i3 socket path to remontoire on load. 
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Tue, 25 Feb 2020 20:06:16 -0800
+
 regolith-ftue (1.0.2-1ubuntu1~ppa1) eoan; urgency=medium
 
   * Migrate to new PPA. 
