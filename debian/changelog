@@ -1,3 +1,10 @@
+regolith-ftue (1.0.5) eoan; urgency=medium
+
+  * Add script from Nord project to create a Regolith gnome-terminal profile
+    based on Xresource values. 
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Thu, 16 Apr 2020 21:52:09 -0700
+
 regolith-ftue (1.0.4) eoan; urgency=medium
 
   * Update toggle for new arg schema of remontoire.

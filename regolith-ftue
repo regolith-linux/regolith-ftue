@@ -4,10 +4,17 @@
 
 UPDATE_FLAG_DIR="$HOME/.config/regolith/flags"
 UPDATE_FLAG_PATH="$UPDATE_FLAG_DIR/show-shortcuts"
+TERM_PROFILE_PATH="$UPDATE_FLAG_DIR/term-profile"
 
 if [ ! -f $UPDATE_FLAG_PATH ]; then	
 	/usr/bin/remontoire-toggle
 
 	mkdir -p $UPDATE_FLAG_DIR
 	touch $UPDATE_FLAG_PATH
+fi
+
+if [ ! -f $TERM_PROFILE_PATH ]; then
+	/usr/bin/create-regolith-term-profile
+
+	touch $TERM_PROFILE_PATH
 fi
