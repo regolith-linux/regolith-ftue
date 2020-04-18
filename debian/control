@@ -8,7 +8,9 @@ Homepage: https://github.com/regolith-linux/regolith-ftue
 
 Package: regolith-ftue
 Architecture: any
-Depends: ${misc:Depends}, remontoire
+Depends: ${misc:Depends},
+  gnome-terminal,
+  remontoire
 Conflicts: regolith-conky-config
 Replaces: regolith-conky-config
 Description: Regolith first time user experience
