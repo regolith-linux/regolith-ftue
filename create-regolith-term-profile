@@ -24,7 +24,7 @@ append_profile_uuid_to_list() {
   gsettings set "$GSETTINGS_PROFILELIST_PATH" list "${list%]*}, '$uuid']"
 }
 
-# Writes the Nord GNOME Terminal theme colors and configurations as dconf key-value pairs to the target profile.
+# Writes the Regolith GNOME Terminal theme colors and configurations as dconf key-value pairs to the target profile.
 #
 # @globread profile_name
 # @return none
@@ -32,7 +32,7 @@ append_profile_uuid_to_list() {
 apply() {
   local \
      color0="$(xrescat St.color0)" \
-		 color1="$(xrescat St.color1)" \
+     color1="$(xrescat St.color1)" \
      color2="$(xrescat St.color2)" \
      color3="$(xrescat St.color3)" \
      color4="$(xrescat St.color4)" \
@@ -41,13 +41,13 @@ apply() {
      color7="$(xrescat St.color7)" \
      color8="$(xrescat St.color8)" \
      color9="$(xrescat St.color9)" \
-		color10="$(xrescat St.color10)" \
+    color10="$(xrescat St.color10)" \
     color11="$(xrescat St.color11)" \
     color12="$(xrescat St.color12)" \
     color13="$(xrescat St.color13)" \
     color14="$(xrescat St.color14)" \
-		color15="$(xrescat St.color15)" \
-		  font="$(xrescat Terminal.font "JetBrains Mono 12")" \
+    color15="$(xrescat St.color15)" \
+      font="$(xrescat Terminal.font "JetBrains Mono 12")" \
     scrollbar="$(xrescat Terminal.scrollbar false)"
 
   _write palette "['$color0', '$color1', '$color2', '$color3', '$color4', '$color5', '$color6', '$color7', '$color8', '$color9', '$color10', '$color11', '$color12', '$color13', '$color14', '$color15']"
@@ -60,13 +60,13 @@ apply() {
 
   _write bold-color "'$color4'"
   _write bold-color-same-as-fg "false"
-	_write bold-is-bright "false"
+  _write bold-is-bright "false"
   log 4 "Applied bold color and configuration"
 
   _write use-theme-colors "false"
   _write use-theme-background "false"
   _write use-theme-transparency "false"
-	_write use-system-font "false"
+  _write use-system-font "false"
   log 4 "Applied system theme compability configuration"
 
   _write cursor-colors-set "true"
@@ -79,19 +79,20 @@ apply() {
   _write highlight-background-color "'$color8'"
   log 4 "Applied highlight colors and configuration"
 
-	_write cursor-blink-mode "'off'"
-	_write audible-bell "false"
-	_write font "'$font'"
+  _write cursor-blink-mode "'off'"
+  _write audible-bell "false"
+  _write font "'$font'"
   _write scrollbar-policy "'$scrollbar'"
 
-	gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false 
-	gsettings set org.gnome.Terminal.ProfilesList default "$profile_uuid"
+  gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
+  gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
+  gsettings set org.gnome.Terminal.ProfilesList default "$profile_uuid"
 
   _write "$NORD_GNOME_TERMINAL_VERSION_DCONF_KEY" "'$NORD_GNOME_TERMINAL_VERSION'"
   log 4 "Set Regolith GNOME Terminal version key of the '$profile_name' profile"
 }
 
-# Applies the Nord GNOME Terminal theme with version comparison.
+# Applies the Regolith GNOME Terminal theme with version comparison.
 #
 # @param $1 the version string to compare against
 # @return none
@@ -101,9 +102,9 @@ apply_version_compared() {
   version=$1
   case "$(vercomp "$NORD_GNOME_TERMINAL_VERSION" "$version"; echo $?)" in
     0)
-      log 3 "Reinstalling Nord GNOME Terminal since the version equaled the version of the '$profile_name' profile!";
+      log 3 "Reinstalling Regolith GNOME Terminal since the version equaled the version of the '$profile_name' profile!";
       apply;
-      log 2 "Reinstalled Nord GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION for the '$profile_name' profile!";
+      log 2 "Reinstalled Regolith GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION for the '$profile_name' profile!";
       exit 0;;
     1)
       log 4 "The script version is newer than the currently installed theme ($NORD_GNOME_TERMINAL_VERSION > $version)"
@@ -111,14 +112,14 @@ apply_version_compared() {
       log 2 "The '$profile_name' profile has been updated successfully from version $version to $NORD_GNOME_TERMINAL_VERSION";
       exit 0;;
     2)
-      log 1 "The detected Nord GNOME Terminal version $version of the '$profile_name' profile is greater than the version that will be applied!";
+      log 1 "The detected Regolith GNOME Terminal version $version of the '$profile_name' profile is greater than the version that will be applied!";
       printf "${_ctb}> [?]${_ct} Override current profile version %s with script version %s? (${_ctb}y${_cr}/${_ctb}n${_cr})" "$version" "$NORD_GNOME_TERMINAL_VERSION"
       read -r -n 1 -s confirmation;
       echo
       case $confirmation in
         [Yy]* )
           apply;
-          log 2 "Nord GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION has been successfully applied!";
+          log 2 "Regolith GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION has been successfully applied!";
           exit 0;;
         [Nn]* )
           log 0 "Installation canceled by user!";
@@ -173,7 +174,7 @@ clone_default_profile() {
   log 3 "Cloned the default profile '$uuid' with new UUID '$profile_uuid'"
 }
 
-# Gets the current Nord GNOME Terminal version.
+# Gets the current Regolith GNOME Terminal version.
 #
 # @globread NORD_GNOME_TERMINAL_VERSION_DCONF_KEY DCONF_PROFILE_BASE_PATH
 # @param $1 the UUID of the profile to check
@@ -407,7 +408,7 @@ while true; do
 done
 
 if validate_dependencies DEPENDENCIES[@]; then
-  
+
   if ! check_migrated_version_comp; then
     log 0 "The installed GNOME Terminal version '$gnome_terminal_version' is not compatible with the required (dconf migrated) version >= 3.8!"
     exit 1
@@ -431,7 +432,7 @@ if validate_dependencies DEPENDENCIES[@]; then
         apply_version_compared "$curr_ver"
       else
         apply
-        log 2 "Nord GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION has been successfully applied to the '$profile_name' profile"
+        log 2 "Regolith GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION has been successfully applied to the '$profile_name' profile"
         exit 0
       fi
     else
@@ -440,7 +441,7 @@ if validate_dependencies DEPENDENCIES[@]; then
     fi
   fi
 
-  # Check for an already existing 'Nord' profile and update it
+  # Check for an already existing 'Regolith' profile and update it
   profile_uuid="$(get_profile_uuid_by_name $NORD_PROFILE_VISIBLE_NAME)"
   if [[ -n $profile_uuid ]]; then
     profile_name="$NORD_PROFILE_VISIBLE_NAME"
@@ -451,7 +452,7 @@ if validate_dependencies DEPENDENCIES[@]; then
 
   clone_default_profile
   apply
-  log 2 "Nord GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION has been successfully applied to the newly created '$NORD_PROFILE_VISIBLE_NAME' profile"
+  log 2 "Regolith GNOME Terminal version $NORD_GNOME_TERMINAL_VERSION has been successfully applied to the newly created '$NORD_PROFILE_VISIBLE_NAME' profile"
   exit 0
 else
   log 0 "Required dependencies were not fulfilled: ${DEPENDENCIES[*]}"

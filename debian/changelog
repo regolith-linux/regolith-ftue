@@ -2,6 +2,7 @@ regolith-ftue (1.0.6-1) eoan; urgency=medium
 
   * Minor script cleanup
   * Default to scrollbar off. 
+  * Default to headerbar off.
 
  -- Regolith Linux <regolith.linux@gmail.com>  Fri, 17 Apr 2020 17:41:30 -0700
 
