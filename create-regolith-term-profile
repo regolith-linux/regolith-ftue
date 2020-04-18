@@ -345,7 +345,6 @@ vercomp() {
 _write() {
   local key="$1"
   local value="$2"
-  echo dconf write "$DCONF_PROFILE_BASE_PATH/:$profile_uuid/$key" "$value"
   dconf write "$DCONF_PROFILE_BASE_PATH/:$profile_uuid/$key" "$value"
 }
 
