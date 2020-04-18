@@ -1,3 +1,9 @@
+regolith-ftue (1.0.9-1) eoan; urgency=medium
+
+  * Fix scrollbar setting key. 
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sat, 18 Apr 2020 11:28:44 -0700
+
 regolith-ftue (1.0.8-1) eoan; urgency=medium
 
   * Add dependency on gnome-terminal. 
