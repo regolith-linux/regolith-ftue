@@ -47,8 +47,8 @@ apply() {
     color13="$(xrescat St.color13)" \
     color14="$(xrescat St.color14)" \
     color15="$(xrescat St.color15)" \
-      font="$(xrescat Terminal.font "JetBrains Mono 12")" \
-    scrollbar="$(xrescat Terminal.scrollbar false)"
+      font="$(xrescat gnome.terminal.font "JetBrains Mono 12")" \
+    scrollbar="$(xrescat gnome.terminal.scrollbar false)"
 
   _write palette "['$color0', '$color1', '$color2', '$color3', '$color4', '$color5', '$color6', '$color7', '$color8', '$color9', '$color10', '$color11', '$color12', '$color13', '$color14', '$color15']"
   log 4 "Applied color color palette"
