@@ -1,3 +1,10 @@
+regolith-ftue (1.0.11-1) bionic; urgency=medium
+
+  [ Ken Gilmer ]
+  * Add gbp config file.
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sun, 31 May 2020 19:21:57 -0700
+
 regolith-ftue (1.0.10-1) eoan; urgency=medium
 
   * Remove debugging output from script. 

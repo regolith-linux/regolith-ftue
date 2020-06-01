@@ -14,3 +14,5 @@ Depends: ${misc:Depends},
 Conflicts: regolith-conky-config
 Replaces: regolith-conky-config
 Description: Regolith first time user experience
+ This package includes scripts and configuration to provide help for
+ first time users.
