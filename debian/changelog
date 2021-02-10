@@ -1,3 +1,10 @@
+regolith-ftue (2.0.1-1) focal; urgency=medium
+
+  [ Ken Gilmer ]
+  * Remove cyclic dep on regolith-i3-ftue
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Tue, 09 Feb 2021 22:24:06 -0800
+
 regolith-ftue (2.0.0-1) focal; urgency=medium
 
   [ Ken Gilmer ]
