@@ -1,3 +1,10 @@
+regolith-ftue (2.0.2-1) focal; urgency=medium
+
+  [ Ken Gilmer ]
+  * Use better Xres keys for term colors. Check gnome-terminal installed before launching profile script.  Misc cleanup.
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sat, 13 Feb 2021 16:51:50 -0800
+
 regolith-ftue (2.0.1-1) focal; urgency=medium
 
   [ Ken Gilmer ]
