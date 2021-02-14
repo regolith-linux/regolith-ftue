@@ -14,7 +14,7 @@ if [ ! -f "$UPDATE_FLAG_PATH" ]; then
     touch "$UPDATE_FLAG_PATH"
 fi
 
-if [[ $(command -v gnome-terminal &> /dev/null) && "$TERM_PROFILE_ENABLED" == "true" && ! -f "$TERM_PROFILE_PATH" ]]; then
+if [[ ! -z "$(command -v gnome-terminal 2> /dev/null)" && "$TERM_PROFILE_ENABLED" == "true" && ! -f "$TERM_PROFILE_PATH" ]]; then
     /usr/share/regolith-ftue/create-regolith-term-profile
 
     touch "$TERM_PROFILE_PATH"

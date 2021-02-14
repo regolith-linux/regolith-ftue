@@ -1,3 +1,10 @@
+regolith-ftue (2.0.3-1) focal; urgency=medium
+
+  [ Ken Gilmer ]
+  * Fix gnome-terminal existence check
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sat, 13 Feb 2021 18:09:47 -0800
+
 regolith-ftue (2.0.2-1) focal; urgency=medium
 
   [ Ken Gilmer ]
