@@ -51,13 +51,16 @@ apply() {
     scrollbar="$(xrescat gnome.terminal.scrollbar never)" \
     useTransparentBg="$(xrescat gnome.terminal.use-transparent-background false)" \
     audibleBell="$(xrescat gnome.terminal.audible-bell false)" \
-    transparentBgPercent="$(xrescat gnome.terminal.background-transparency-percent 4)"
+    transparentBgPercent="$(xrescat gnome.terminal.background-transparency-percent 4)" \
+    blink="$(xrescat gnome.terminal.cursor-blink-mode off)"
 
   _write palette "['$color0', '$color1', '$color2', '$color3', '$color4', '$color5', '$color6', '$color7', '$color8', '$color9', '$color10', '$color11', '$color12', '$color13', '$color14', '$color15']"
   log 4 "Applied color color palette"
 
-  _write background-color "'$color0'"
-  _write foreground-color "'$color7'"
+  local background="$(xrescat gnome.terminal.background-color $color0)"
+  local foreground="$(xrescat gnome.terminal.foreground-color $color7)"
+  _write background-color "'$background'"
+  _write foreground-color "'$foreground'"
   _write use-transparent-background "$useTransparentBg"
   _write background-transparency-percent "$transparentBgPercent"
   log 4 "Applied background- and foreground colors"
@@ -83,7 +86,7 @@ apply() {
   _write highlight-background-color "'$color8'"
   log 4 "Applied highlight colors and configuration"
 
-  _write cursor-blink-mode "'off'"
+  _write cursor-blink-mode "'$blink'"
   _write audible-bell "$audibleBell"
   _write font "'$font'"
   _write scrollbar-policy "'$scrollbar'"
