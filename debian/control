@@ -9,7 +9,7 @@ Homepage: https://github.com/regolith-linux/regolith-ftue
 Package: regolith-ftue
 Architecture: any
 Depends: ${misc:Depends},  
-  remontoire,
+  ilia,
   uuid-runtime
 Recommends: gnome-terminal
 Conflicts: regolith-conky-config

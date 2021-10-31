@@ -1,3 +1,11 @@
+regolith-ftue (2.1.0-1) focal; urgency=medium
+
+  [ Ken Gilmer ]
+  * Rename term profile script for consistency
+  * Switch to ilia over remontoire for keybinding viewer
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sun, 31 Oct 2021 15:07:53 -0700
+
 regolith-ftue (2.0.5-1) focal; urgency=medium
 
   [ Ken Gilmer ]

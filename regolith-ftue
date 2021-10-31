@@ -8,14 +8,14 @@ TERM_PROFILE_PATH="$UPDATE_FLAG_DIR/term-profile"
 TERM_PROFILE_ENABLED="$(xrescat gnome.terminal.update true)"
 
 if [ ! -f "$UPDATE_FLAG_PATH" ]; then	
-    /usr/bin/remontoire-toggle
+    ilia -p keybindings &
 
     mkdir -p "$UPDATE_FLAG_DIR"
     touch "$UPDATE_FLAG_PATH"
 fi
 
 if [[ ! -z "$(command -v gnome-terminal 2> /dev/null)" && "$TERM_PROFILE_ENABLED" == "true" && ! -f "$TERM_PROFILE_PATH" ]]; then
-    /usr/share/regolith-ftue/create-regolith-term-profile
+    /usr/share/regolith-ftue/regolith-init-term-profile
 
     touch "$TERM_PROFILE_PATH"
 fi
