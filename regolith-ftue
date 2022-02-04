@@ -2,7 +2,7 @@
 # This script will be called after i3 starts. It's purpose is to do things
 # that only make sense for the first time the user starts Regolith.
 
-UPDATE_FLAG_DIR="$HOME/.config/regolith/flags"
+UPDATE_FLAG_DIR="$HOME/.config/regolith2/flags"
 UPDATE_FLAG_PATH="$UPDATE_FLAG_DIR/show-shortcuts"
 TERM_PROFILE_PATH="$UPDATE_FLAG_DIR/term-profile"
 TERM_PROFILE_ENABLED="$(xrescat gnome.terminal.update true)"
