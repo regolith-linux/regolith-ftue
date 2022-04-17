@@ -8,7 +8,8 @@ TERM_PROFILE_PATH="$UPDATE_FLAG_DIR/term-profile"
 TERM_PROFILE_ENABLED="$(xrescat gnome.terminal.update true)"
 
 if [ ! -f "$UPDATE_FLAG_PATH" ]; then	
-    ilia -p keybindings &
+    # Wait for i3 to load before reading i3 config, avoiding race which shows no keybindings
+    sleep 1 && ilia -p keybindings &
 
     mkdir -p "$UPDATE_FLAG_DIR"
     touch "$UPDATE_FLAG_PATH"
