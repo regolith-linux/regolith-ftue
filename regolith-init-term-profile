@@ -31,23 +31,23 @@ append_profile_uuid_to_list() {
 # @since 0.2.0
 apply() {
   local \
-     color0="$(xrescat gnome.terminal.color0)" \
-     color1="$(xrescat gnome.terminal.color1)" \
-     color2="$(xrescat gnome.terminal.color2)" \
-     color3="$(xrescat gnome.terminal.color3)" \
-     color4="$(xrescat gnome.terminal.color4)" \
-     color5="$(xrescat gnome.terminal.color5)" \
-     color6="$(xrescat gnome.terminal.color6)" \
-     color7="$(xrescat gnome.terminal.color7)" \
-     color8="$(xrescat gnome.terminal.color8)" \
-     color9="$(xrescat gnome.terminal.color9)" \
+    color0="$(xrescat gnome.terminal.color0)" \
+    color1="$(xrescat gnome.terminal.color1)" \
+    color2="$(xrescat gnome.terminal.color2)" \
+    color3="$(xrescat gnome.terminal.color3)" \
+    color4="$(xrescat gnome.terminal.color4)" \
+    color5="$(xrescat gnome.terminal.color5)" \
+    color6="$(xrescat gnome.terminal.color6)" \
+    color7="$(xrescat gnome.terminal.color7)" \
+    color8="$(xrescat gnome.terminal.color8)" \
+    color9="$(xrescat gnome.terminal.color9)" \
     color10="$(xrescat gnome.terminal.color10)" \
     color11="$(xrescat gnome.terminal.color11)" \
     color12="$(xrescat gnome.terminal.color12)" \
     color13="$(xrescat gnome.terminal.color13)" \
     color14="$(xrescat gnome.terminal.color14)" \
     color15="$(xrescat gnome.terminal.color15)" \
-      font="$(xrescat gnome.terminal.font "DejaVu Sans Mono Book 13")" \
+    font="$(xrescat gnome.terminal.font "monospace")" \
     scrollbar="$(xrescat gnome.terminal.scrollbar never)" \
     useTransparentBg="$(xrescat gnome.terminal.use-transparent-background false)" \
     audibleBell="$(xrescat gnome.terminal.audible-bell false)" \
