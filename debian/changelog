@@ -1,3 +1,10 @@
+regolith-ftue (2.1.4) focal; urgency=medium
+
+  [ Ken Gilmer ]
+  * Remove unneeded sleep and launch shortcuts in all page mode
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sun, 15 May 2022 18:26:27 -0700
+
 regolith-ftue (2.1.3) focal; urgency=medium
 
   [ Ken Gilmer ]
