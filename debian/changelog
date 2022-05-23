@@ -1,3 +1,9 @@
+regolith-ftue (2.1.5) focal; urgency=medium
+
+  * Use stylesheet for proper font rendering on ftue help
+
+ -- Ken Gilmer <kgilmer@debian-BULLSEYE-live-builder-AMD64>  Sun, 22 May 2022 21:09:40 -0700
+
 regolith-ftue (2.1.4) focal; urgency=medium
 
   [ Ken Gilmer ]
