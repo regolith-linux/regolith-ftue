@@ -7,8 +7,12 @@ UPDATE_FLAG_PATH="$UPDATE_FLAG_DIR/show-shortcuts"
 TERM_PROFILE_PATH="$UPDATE_FLAG_DIR/term-profile"
 TERM_PROFILE_ENABLED="$(xrescat gnome.terminal.update true)"
 
-if [ ! -f "$UPDATE_FLAG_PATH" ]; then	    
-    ilia -p keybindings -a &
+if [ ! -f "$UPDATE_FLAG_PATH" ]; then
+    if [ -f /usr/share/regolith-look/default/ilia.css  ]; then
+        ilia -p keybindings -a -t /usr/share/regolith-look/default/ilia.css &
+    else
+        ilia -p keybindings -a &
+    fi    
 
     mkdir -p "$UPDATE_FLAG_DIR"
     touch "$UPDATE_FLAG_PATH"
