@@ -30,35 +30,40 @@ append_profile_uuid_to_list() {
 # @return none
 # @since 0.2.0
 apply() {
+  resource_getter="xrescat"
+  if [ $XDG_SESSION_TYPE == "wayland" ]; then 
+    resource_getter="trawlcat"
+  fi
+
   local \
-    color0="$(xrescat gnome.terminal.color0)" \
-    color1="$(xrescat gnome.terminal.color1)" \
-    color2="$(xrescat gnome.terminal.color2)" \
-    color3="$(xrescat gnome.terminal.color3)" \
-    color4="$(xrescat gnome.terminal.color4)" \
-    color5="$(xrescat gnome.terminal.color5)" \
-    color6="$(xrescat gnome.terminal.color6)" \
-    color7="$(xrescat gnome.terminal.color7)" \
-    color8="$(xrescat gnome.terminal.color8)" \
-    color9="$(xrescat gnome.terminal.color9)" \
-    color10="$(xrescat gnome.terminal.color10)" \
-    color11="$(xrescat gnome.terminal.color11)" \
-    color12="$(xrescat gnome.terminal.color12)" \
-    color13="$(xrescat gnome.terminal.color13)" \
-    color14="$(xrescat gnome.terminal.color14)" \
-    color15="$(xrescat gnome.terminal.color15)" \
-    font="$(xrescat gnome.terminal.font "monospace")" \
-    scrollbar="$(xrescat gnome.terminal.scrollbar never)" \
-    useTransparentBg="$(xrescat gnome.terminal.use-transparent-background false)" \
-    audibleBell="$(xrescat gnome.terminal.audible-bell false)" \
-    transparentBgPercent="$(xrescat gnome.terminal.background-transparency-percent 4)" \
-    blink="$(xrescat gnome.terminal.cursor-blink-mode off)"
+    color0="$($resource_getter gnome.terminal.color0)" \
+    color1="$($resource_getter gnome.terminal.color1)" \
+    color2="$($resource_getter gnome.terminal.color2)" \
+    color3="$($resource_getter gnome.terminal.color3)" \
+    color4="$($resource_getter gnome.terminal.color4)" \
+    color5="$($resource_getter gnome.terminal.color5)" \
+    color6="$($resource_getter gnome.terminal.color6)" \
+    color7="$($resource_getter gnome.terminal.color7)" \
+    color8="$($resource_getter gnome.terminal.color8)" \
+    color9="$($resource_getter gnome.terminal.color9)" \
+    color10="$($resource_getter gnome.terminal.color10)" \
+    color11="$($resource_getter gnome.terminal.color11)" \
+    color12="$($resource_getter gnome.terminal.color12)" \
+    color13="$($resource_getter gnome.terminal.color13)" \
+    color14="$($resource_getter gnome.terminal.color14)" \
+    color15="$($resource_getter gnome.terminal.color15)" \
+    font="$($resource_getter gnome.terminal.font "monospace")" \
+    scrollbar="$($resource_getter gnome.terminal.scrollbar never)" \
+    useTransparentBg="$($resource_getter gnome.terminal.use-transparent-background false)" \
+    audibleBell="$($resource_getter gnome.terminal.audible-bell false)" \
+    transparentBgPercent="$($resource_getter gnome.terminal.background-transparency-percent 4)" \
+    blink="$($resource_getter gnome.terminal.cursor-blink-mode off)"
 
   _write palette "['$color0', '$color1', '$color2', '$color3', '$color4', '$color5', '$color6', '$color7', '$color8', '$color9', '$color10', '$color11', '$color12', '$color13', '$color14', '$color15']"
   log 4 "Applied color color palette"
 
-  local background="$(xrescat gnome.terminal.background-color $color0)"
-  local foreground="$(xrescat gnome.terminal.foreground-color $color7)"
+  local background="$($resource_getter gnome.terminal.background-color $color0)"
+  local foreground="$($resource_getter gnome.terminal.foreground-color $color7)"
   _write background-color "'$background'"
   _write foreground-color "'$foreground'"
   _write use-transparent-background "$useTransparentBg"
@@ -183,8 +188,7 @@ clone_default_profile() {
 
 # Gets the current Regolith GNOME Terminal version.
 #
-# @globread NORD_GNOME_TERMINAL_VERSION_DCONF_KEY DCONF_PROFILE_BASE_PATH
-# @param $1 the UUID of the profile to check
+# @globread NORD_GNOME_TERMINAL_VERSION_DCONF_KEY DCONF_PROFILE_BASE_PATH # @param $1 the UUID of the profile to check
 # @since 0.2.0
 get_current_version() {
   local uuid version
