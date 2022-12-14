@@ -1,3 +1,9 @@
+regolith-ftue (2.1.6) focal; urgency=medium
+
+  * Add missing dependency
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sun, 09 Oct 2022 10:39:15 -0700
+
 regolith-ftue (2.1.5) focal; urgency=medium
 
   * Use stylesheet for proper font rendering on ftue help
