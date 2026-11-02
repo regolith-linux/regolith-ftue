@@ -8,11 +8,22 @@ TERM_PROFILE_PATH="$UPDATE_FLAG_DIR/term-profile"
 TERM_PROFILE_ENABLED="$(xrescat gnome.terminal.update true)"
 
 if [ ! -f "$UPDATE_FLAG_PATH" ]; then
-    if [ -f /usr/share/regolith-look/default/ilia.css  ]; then
-        ilia -p keybindings -a -t /usr/share/regolith-look/default/ilia.css &
+    # Use the active look's stylesheet, as the help keybinding does
+    # (ilia.stylesheet, read with trawlcat in the sway session).
+    if [ "${XDG_SESSION_TYPE-}" == "wayland" ]; then
+        STYLESHEET="$(trawlcat ilia.stylesheet "" 2> /dev/null)"
+    else
+        STYLESHEET="$(xrescat ilia.stylesheet "" 2> /dev/null)"
+    fi
+    if [ -z "$STYLESHEET" ] || [ ! -f "$STYLESHEET" ]; then
+        STYLESHEET=/usr/share/regolith-look/default/ilia.css
+    fi
+
+    if [ -f "$STYLESHEET" ]; then
+        ilia -p keybindings -a -t "$STYLESHEET" &
     else
         ilia -p keybindings -a &
-    fi    
+    fi
 
     mkdir -p "$UPDATE_FLAG_DIR"
     touch "$UPDATE_FLAG_PATH"
