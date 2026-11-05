@@ -5,16 +5,19 @@
 UPDATE_FLAG_DIR="$HOME/.config/regolith3/flags"
 UPDATE_FLAG_PATH="$UPDATE_FLAG_DIR/show-shortcuts"
 TERM_PROFILE_PATH="$UPDATE_FLAG_DIR/term-profile"
-TERM_PROFILE_ENABLED="$(xrescat gnome.terminal.update true)"
+
+# Read resources from trawl in the sway session, from Xresources in X11.
+if [ "${XDG_SESSION_TYPE-}" == "wayland" ]; then
+    RESOURCE_GETTER=trawlcat
+else
+    RESOURCE_GETTER=xrescat
+fi
+
+TERM_PROFILE_ENABLED="$($RESOURCE_GETTER gnome.terminal.update true 2> /dev/null)"
 
 if [ ! -f "$UPDATE_FLAG_PATH" ]; then
-    # Use the active look's stylesheet, as the help keybinding does
-    # (ilia.stylesheet, read with trawlcat in the sway session).
-    if [ "${XDG_SESSION_TYPE-}" == "wayland" ]; then
-        STYLESHEET="$(trawlcat ilia.stylesheet "" 2> /dev/null)"
-    else
-        STYLESHEET="$(xrescat ilia.stylesheet "" 2> /dev/null)"
-    fi
+    # Use the active look's stylesheet, as the help keybinding does.
+    STYLESHEET="$($RESOURCE_GETTER ilia.stylesheet "" 2> /dev/null)"
     if [ -z "$STYLESHEET" ] || [ ! -f "$STYLESHEET" ]; then
         STYLESHEET=/usr/share/regolith-look/default/ilia.css
     fi
