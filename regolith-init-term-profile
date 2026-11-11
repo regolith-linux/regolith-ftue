@@ -21,7 +21,7 @@ append_profile_uuid_to_list() {
   local uuid list
   uuid="$1"
   list=$(gsettings get "$GSETTINGS_PROFILELIST_PATH" list)
-  gsettings set "$GSETTINGS_PROFILELIST_PATH" list "${list%]*}, '$uuid']"
+  gsettings set "$GSETTINGS_PROFILELIST_PATH" list "${list%]*}, $(gvariant_string "$uuid")]"
 }
 
 # Writes the Regolith GNOME Terminal theme colors and configurations as dconf key-value pairs to the target profile.
@@ -59,18 +59,23 @@ apply() {
     transparentBgPercent="$($resource_getter gnome.terminal.background-transparency-percent 4)" \
     blink="$($resource_getter gnome.terminal.cursor-blink-mode off)"
 
-  _write palette "['$color0', '$color1', '$color2', '$color3', '$color4', '$color5', '$color6', '$color7', '$color8', '$color9', '$color10', '$color11', '$color12', '$color13', '$color14', '$color15']"
+  local palette="" color
+  for color in "$color0" "$color1" "$color2" "$color3" "$color4" "$color5" "$color6" "$color7" \
+               "$color8" "$color9" "$color10" "$color11" "$color12" "$color13" "$color14" "$color15"; do
+    palette+="${palette:+, }$(gvariant_string "$color")"
+  done
+  _write palette "[$palette]"
   log 4 "Applied color color palette"
 
   local background="$($resource_getter gnome.terminal.background-color $color0)"
   local foreground="$($resource_getter gnome.terminal.foreground-color $color7)"
-  _write background-color "'$background'"
-  _write foreground-color "'$foreground'"
+  _write background-color "$(gvariant_string "$background")"
+  _write foreground-color "$(gvariant_string "$foreground")"
   _write use-transparent-background "$useTransparentBg"
   _write background-transparency-percent "$transparentBgPercent"
   log 4 "Applied background- and foreground colors"
 
-  _write bold-color "'$color4'"
+  _write bold-color "$(gvariant_string "$color4")"
   _write bold-color-same-as-fg "false"
   _write bold-is-bright "false"
   log 4 "Applied bold color and configuration"
@@ -82,25 +87,25 @@ apply() {
   log 4 "Applied system theme compability configuration"
 
   _write cursor-colors-set "true"
-  _write cursor-foreground-color "'$color1'"
-  _write cursor-background-color "'$color8'"
+  _write cursor-foreground-color "$(gvariant_string "$color1")"
+  _write cursor-background-color "$(gvariant_string "$color8")"
   log 4 "Applied cursor colors and configuration"
 
   _write highlight-colors-set "true"
-  _write highlight-foreground-color "'$color0'"
-  _write highlight-background-color "'$color8'"
+  _write highlight-foreground-color "$(gvariant_string "$color0")"
+  _write highlight-background-color "$(gvariant_string "$color8")"
   log 4 "Applied highlight colors and configuration"
 
-  _write cursor-blink-mode "'$blink'"
+  _write cursor-blink-mode "$(gvariant_string "$blink")"
   _write audible-bell "$audibleBell"
-  _write font "'$font'"
-  _write scrollbar-policy "'$scrollbar'"
+  _write font "$(gvariant_string "$font")"
+  _write scrollbar-policy "$(gvariant_string "$scrollbar")"
 
   gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
   gsettings set org.gnome.Terminal.Legacy.Settings headerbar "@mb false"
   gsettings set org.gnome.Terminal.ProfilesList default "$profile_uuid"
 
-  _write "$NORD_GNOME_TERMINAL_VERSION_DCONF_KEY" "'$NORD_GNOME_TERMINAL_VERSION'"
+  _write "$NORD_GNOME_TERMINAL_VERSION_DCONF_KEY" "$(gvariant_string "$NORD_GNOME_TERMINAL_VERSION")"
   log 4 "Set Regolith GNOME Terminal version key of the '$profile_name' profile"
 }
 
@@ -169,7 +174,7 @@ cleanup() {
   log 4 "Cleaning up script execution by unsetting declared functions and variables"
   unset -v _cr _ct _ctb _ct_highlight _ct_primary _ctb_error _ctb_highlight _ctb_primary _ctb_success _ctb_warning
   unset -v NORD_GNOME_TERMINAL_SCRIPT_OPTS NORD_GNOME_TERMINAL_VERSION NORD_GNOME_TERMINAL_VERSION_DCONF_KEY NORD_PROFILE_VISIBLE_NAME log_level DEPENDENCIES DCONF_PROFILE_BASE_PATH GSETTINGS_PROFILELIST_PATH gnome_terminal_version profile_name profile_uuid
-  unset -f append_profile_uuid_to_list apply check_migrated_version_comp cleanup clone_default_profile get_profiles get_profile_uuid_by_name log print_help validate_dependencies vercomp _write
+  unset -f append_profile_uuid_to_list apply check_migrated_version_comp cleanup clone_default_profile get_profiles get_profile_uuid_by_name gvariant_string log print_help validate_dependencies vercomp _write
 }
 
 # Clones the default profile, generates and saves the new UUID and adds it to the profile list.
@@ -181,7 +186,7 @@ clone_default_profile() {
   uuid="$(gsettings get "$GSETTINGS_PROFILELIST_PATH" default | tr -d \')"
   profile_uuid="$(uuidgen)"
   dconf dump "$DCONF_PROFILE_BASE_PATH"/:"$uuid"/ | dconf load "$DCONF_PROFILE_BASE_PATH"/:"$profile_uuid"/
-  dconf write "$DCONF_PROFILE_BASE_PATH"/:"$profile_uuid"/visible-name "'$NORD_PROFILE_VISIBLE_NAME'"
+  dconf write "$DCONF_PROFILE_BASE_PATH"/:"$profile_uuid"/visible-name "$(gvariant_string "$NORD_PROFILE_VISIBLE_NAME")"
   append_profile_uuid_to_list "$profile_uuid"
   log 3 "Cloned the default profile '$uuid' with new UUID '$profile_uuid'"
 }
@@ -344,6 +349,25 @@ vercomp() {
     fi
   done
   return 0
+}
+
+# Prints the given text as a GVariant string literal, as dconf and gsettings parse it.
+#
+# The text is wrapped in single quotes; backslashes and single quotes inside it are escaped,
+# so values such as fonts with apostrophes are written verbatim instead of breaking the parser.
+#
+# @param $1 the text to be quoted
+# @return none
+gvariant_string() {
+  local text="$1" quoted="" char i
+  for ((i = 0; i < ${#text}; i++)); do
+    char="${text:i:1}"
+    case "$char" in
+      \\ | \' ) quoted+="\\$char" ;;
+      * ) quoted+="$char" ;;
+    esac
+  done
+  printf "'%s'" "$quoted"
 }
 
 # Shorthand function to write the given key-value pair to the profile.

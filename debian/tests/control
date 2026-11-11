@@ -1,0 +1,3 @@
+Tests: term-profile
+Depends: @, gnome-terminal, dbus, dconf-service, python3-gi
+Restrictions: allow-stderr

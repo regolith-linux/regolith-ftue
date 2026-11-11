@@ -11,7 +11,8 @@ Architecture: any
 Depends: ${misc:Depends},  
   ilia,
   uuid-runtime,
-  dconf-cli
+  dconf-cli,
+  libglib2.0-bin
 Recommends: gnome-terminal
 Conflicts: regolith-conky-config
 Replaces: regolith-conky-config
