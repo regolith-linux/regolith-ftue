@@ -1,0 +1,146 @@
+#!/bin/bash
+# Runs regolith-ftue against a real dconf database on a private session bus and
+# checks the GNOME Terminal profile it creates:
+#  - string resources (fonts with quotes, backslashes, non-ASCII) are stored verbatim;
+#  - the term-profile flag is created only when the profile setup succeeded, so a
+#    failed setup is retried at the next login.
+# Resources come from stand-ins for xrescat and trawlcat that read a plain file.
+
+set -u
+
+FTUE="${FTUE:-/usr/bin/regolith-ftue}"
+WORK="$(mktemp -d "${AUTOPKGTEST_TMP:-${TMPDIR:-/tmp}}/ftue-term-profile.XXXXXX")"
+PROFILES=/org/gnome/terminal/legacy/profiles:
+failures=0
+
+mkdir -p "$WORK/bin"
+cat > "$WORK/bin/xrescat" <<'GETTER'
+#!/bin/bash
+# xrescat/trawlcat stand-in: print the value of resource $1 from $RESOURCES, or $2.
+key="$1" value="${2-}"
+while IFS= read -r line; do
+    if [[ "$line" == "$key:"* ]]; then
+        value="${line#"$key:"}"
+        value="${value#"${value%%[![:space:]]*}"}"
+    fi
+done < "$RESOURCES"
+printf '%s\n' "$value"
+GETTER
+chmod +x "$WORK/bin/xrescat"
+ln -s xrescat "$WORK/bin/trawlcat"
+
+# Runs regolith-ftue in its own session bus and records what it wrote.
+cat > "$WORK/session" <<'SESSION'
+#!/bin/bash
+"$FTUE" > "$HOME/ftue.log" 2>&1
+rc=$?
+uuid="$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")"
+dconf read "$PROFILES/:$uuid/font" > "$HOME/font.gvariant"
+dconf read "$PROFILES/:$uuid/visible-name" > "$HOME/name.gvariant"
+for p in $(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]',"); do
+    dconf read "$PROFILES/:$p/visible-name"
+done > "$HOME/names.gvariant"
+exit "$rc"
+SESSION
+chmod +x "$WORK/session"
+
+# Prints the string held by a GVariant text value.
+gvariant_text() {
+    python3 -c 'import sys
+from gi.repository import GLib
+text = sys.argv[1]
+print(GLib.Variant.parse(GLib.VariantType("s"), text, None, None).get_string() if text else "<unset>")' "$1"
+}
+
+new_home() {  # sets $home to a fresh home directory
+    home="$WORK/home$((++homes))"
+    mkdir -p "$home/.config/regolith3/flags"
+    # The keybinding help has already been shown; only the terminal profile is under test.
+    touch "$home/.config/regolith3/flags/show-shortcuts"
+}
+
+write_resources() {  # write_resources <home> <font> [extra resource lines...]
+    local home="$1" font="$2"
+    shift 2
+    {
+        for i in $(seq 0 15); do printf 'gnome.terminal.color%s: #%06x\n' "$i" $((i * 0x111111)); done
+        printf 'gnome.terminal.font: %s\n' "$font"
+        printf '%s\n' "$@"
+    } > "$home/resources"
+}
+
+run_ftue() {  # run_ftue <home> <session type>
+    env HOME="$1" XDG_CONFIG_HOME="$1/.config" XDG_CACHE_HOME="$1/.cache" \
+        XDG_RUNTIME_DIR="$1/runtime" XDG_SESSION_TYPE="$2" RESOURCES="$1/resources" \
+        PATH="$WORK/bin:$PATH" FTUE="$FTUE" PROFILES="$PROFILES" \
+        bash -c 'mkdir -p -m 700 "$XDG_RUNTIME_DIR" && exec dbus-run-session -- "$0"' "$WORK/session"
+}
+
+pass() { echo "PASS: $*"; }
+fail() { echo "FAIL: $*"; failures=$((failures + 1)); }
+
+check_font() {  # check_font <label> <home> <expected font>
+    local got
+    got="$(gvariant_text "$(cat "$2/font.gvariant")" 2>&1)"
+    if [ "$got" == "$3" ]; then
+        pass "$1: font reads back as [$3]"
+    else
+        fail "$1: font reads back as [$got], expected [$3]"
+    fi
+}
+
+homes=0
+for session in x11 wayland; do
+    for font in "Monospace 'quoted' 11" 'Mono "double" 11' 'Back\slash Mono 11' 'Ünïcødé 等幅 Mono 11'; do
+        label="$session, font [$font]"
+        new_home
+        write_resources "$home" "$font"
+        run_ftue "$home" "$session"
+        rc=$?
+        if [ "$rc" -eq 0 ]; then pass "$label: regolith-ftue exits 0"; else fail "$label: regolith-ftue exits $rc"; sed 's/^/    /' "$home/ftue.log"; fi
+        check_font "$label" "$home" "$font"
+        if [ -f "$home/.config/regolith3/flags/term-profile" ]; then
+            pass "$label: term-profile flag created"
+        else
+            fail "$label: term-profile flag missing after a successful setup"
+        fi
+    done
+
+    label="$session, failed setup"
+    new_home
+    font="It's \"all\" here \\ 端末 11"
+    write_resources "$home" "$font" "gnome.terminal.audible-bell: not-a-boolean"
+    run_ftue "$home" "$session"
+    rc=$?
+    if [ "$rc" -ne 0 ]; then pass "$label: regolith-ftue exits $rc"; else fail "$label: regolith-ftue exits 0"; fi
+    if [ -f "$home/.config/regolith3/flags/term-profile" ]; then
+        fail "$label: term-profile flag created although the setup failed"
+    else
+        pass "$label: no term-profile flag"
+    fi
+
+    label="$session, next login after the failure"
+    write_resources "$home" "$font"
+    run_ftue "$home" "$session"
+    rc=$?
+    if [ "$rc" -eq 0 ]; then pass "$label: regolith-ftue exits 0"; else fail "$label: regolith-ftue exits $rc"; sed 's/^/    /' "$home/ftue.log"; fi
+    check_font "$label" "$home" "$font"
+    if [ -f "$home/.config/regolith3/flags/term-profile" ]; then
+        pass "$label: term-profile flag created"
+    else
+        fail "$label: term-profile flag missing after the retry"
+    fi
+    regolith_profiles="$(grep -c "^'Regolith'$" "$home/names.gvariant")"
+    if [ "$regolith_profiles" -eq 1 ]; then
+        pass "$label: one Regolith profile"
+    else
+        fail "$label: $regolith_profiles Regolith profiles"
+    fi
+done
+
+rm -rf "$WORK"
+if [ "$failures" -ne 0 ]; then
+    echo "$failures check(s) failed"
+    exit 1
+fi
+echo "all checks passed"

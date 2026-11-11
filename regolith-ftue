@@ -33,7 +33,14 @@ if [ ! -f "$UPDATE_FLAG_PATH" ]; then
 fi
 
 if [[ ! -z "$(command -v gnome-terminal 2> /dev/null)" && "$TERM_PROFILE_ENABLED" == "true" && ! -f "$TERM_PROFILE_PATH" ]]; then
-    /usr/share/regolith-ftue/regolith-init-term-profile
-
-    touch "$TERM_PROFILE_PATH"
+    # Only mark the profile as done once the helper has succeeded, so a
+    # failed setup is retried at the next login.
+    if /usr/share/regolith-ftue/regolith-init-term-profile; then
+        mkdir -p "$UPDATE_FLAG_DIR"
+        touch "$TERM_PROFILE_PATH"
+    else
+        HELPER_RC=$?
+        echo "regolith-ftue: GNOME Terminal profile setup failed (exit $HELPER_RC); it will be retried at the next login" >&2
+        exit "$HELPER_RC"
+    fi
 fi
