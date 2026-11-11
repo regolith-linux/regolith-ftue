@@ -1,3 +1,13 @@
+regolith-ftue (2.2.3) focal; urgency=medium
+
+  [ rego-port-bot ]
+  * fix: show the first-login keybinding help with the active look's stylesheet
+  * fix: read the terminal profile setting from trawl in the sway session
+  * fix: quote terminal profile strings as GVariant and retry failed setups
+  * fix: depend on libglib2.0-bin for gsettings
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Wed, 11 Nov 2026 11:03:46 -0800
+
 regolith-ftue (2.2.2) focal; urgency=medium
 
   [ Khosrow Moossavi ]
