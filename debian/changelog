@@ -1,3 +1,10 @@
+regolith-ftue (2.2.4) focal; urgency=medium
+
+  [ rego-port-bot ]
+  * fix: don't print an error when XDG_SESSION_TYPE is unset
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Sat, 14 Nov 2026 11:40:46 -0800
+
 regolith-ftue (2.2.3) focal; urgency=medium
 
   [ rego-port-bot ]
