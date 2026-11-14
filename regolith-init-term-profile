@@ -31,7 +31,7 @@ append_profile_uuid_to_list() {
 # @since 0.2.0
 apply() {
   resource_getter="xrescat"
-  if [ $XDG_SESSION_TYPE == "wayland" ]; then 
+  if [ "${XDG_SESSION_TYPE-}" == "wayland" ]; then
     resource_getter="trawlcat"
   fi
 
