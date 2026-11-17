@@ -1,3 +1,10 @@
+regolith-ftue (2.2.5) focal; urgency=medium
+
+  [ Carlos Fernandez Sanz ]
+  * fix(debian): stop recommending gnome-terminal and let each session pick its terminal
+
+ -- Regolith Linux <regolith.linux@gmail.com>  Tue, 17 Nov 2026 10:38:13 -0800
+
 regolith-ftue (2.2.4) focal; urgency=medium
 
   [ rego-port-bot ]
