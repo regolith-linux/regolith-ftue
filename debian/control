@@ -13,7 +13,6 @@ Depends: ${misc:Depends},
   uuid-runtime,
   dconf-cli,
   libglib2.0-bin
-Recommends: gnome-terminal
 Conflicts: regolith-conky-config
 Replaces: regolith-conky-config
 Description: Regolith first time user experience
